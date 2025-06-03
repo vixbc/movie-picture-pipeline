@@ -3,6 +3,10 @@ import MovieList from './components/MovieList';
 import MovieDetails from './components/MovieDetails';
 import './App.css';
 
+
+// This is a test comment to trigger the CI workflow
+
+
 export default function App() {
   const [selectedMovie, setSelectedMovie] = useState(null);
 
@@ -22,6 +26,6 @@ export default function App() {
           <MovieDetails movie={selectedMovie} />
         </>
       )}
-    </div>
+    </div> 
   );
 }
