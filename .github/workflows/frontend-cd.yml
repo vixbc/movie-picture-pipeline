@@ -47,11 +47,12 @@ jobs:
         uses: docker/setup-buildx-action@v2
       - name: Build Docker image
         run: |
-          # buildx with --load to make the image available locally
           docker buildx build --load \
             --build-arg REACT_APP_MOVIE_API_URL=http://localhost:5000 \
             --tag ${{ secrets.FRONTEND_ECR_REPO }}:${{ github.sha }} \
             .
+
+
 
 
 
