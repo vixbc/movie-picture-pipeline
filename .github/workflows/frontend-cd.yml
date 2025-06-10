@@ -41,10 +41,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: us-east-1
+
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
-        env:
-          AWS_REGION: us-east-1
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
@@ -54,6 +59,7 @@ jobs:
           tags: ${{ secrets.FRONTEND_ECR_REPO }}:${{ github.sha }}
           build-args: |
             REACT_APP_MOVIE_API_URL=http://localhost:5000
+
 
   deploy:
     runs-on: ubuntu-latest
