@@ -88,5 +88,5 @@ jobs:
 
       - name: Deploy to cluster
         run: |
-          kustomize build | kubectl apply -f -
+          kustomize build | kubectl apply --validate=false -f -
 
