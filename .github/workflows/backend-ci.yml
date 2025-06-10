@@ -37,7 +37,8 @@ jobs:
         with:
           python-version: '3.8'
       - name: Install dependencies
-        run: pip install flask pytest flake8
+        run: 
+          pip install flask flask_cors pytest flake8
       - name: Run tests
         run: pytest
 
