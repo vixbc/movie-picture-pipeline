@@ -1,0 +1,7 @@
+{
+  "backend_ecr": "836416237703.dkr.ecr.us-east-1.amazonaws.com/backend",
+  "cluster_name": "cluster",
+  "cluster_version": "1.25",
+  "frontend_ecr": "836416237703.dkr.ecr.us-east-1.amazonaws.com/frontend",
+  "github_action_user_arn": "arn:aws:iam::836416237703:user/github-action-user"
+}
