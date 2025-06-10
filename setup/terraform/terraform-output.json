@@ -1,0 +1,27 @@
+{
+  "backend_ecr": {
+    "sensitive": false,
+    "type": "string",
+    "value": "836416237703.dkr.ecr.us-east-1.amazonaws.com/backend"
+  },
+  "cluster_name": {
+    "sensitive": false,
+    "type": "string",
+    "value": "cluster"
+  },
+  "cluster_version": {
+    "sensitive": false,
+    "type": "string",
+    "value": "1.25"
+  },
+  "frontend_ecr": {
+    "sensitive": false,
+    "type": "string",
+    "value": "836416237703.dkr.ecr.us-east-1.amazonaws.com/frontend"
+  },
+  "github_action_user_arn": {
+    "sensitive": false,
+    "type": "string",
+    "value": "arn:aws:iam::836416237703:user/github-action-user"
+  }
+}
