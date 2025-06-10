@@ -17,13 +17,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
           python-version: '3.8'
-      - name: Install flake8
-        run: pip install flake8
-      - name: Lint
-        run: flake8 app.py test_app.py
+      - run: pip install flake8
+      - run: flake8 .
 
   test:
     runs-on: ubuntu-latest
@@ -33,13 +31,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
           python-version: '3.8'
-      - name: Install dependencies
-        run: pip install flask flask-cors pytest
-      - name: Run tests
-        run: pytest
+      - run: pip install -r requirements.txt
+      - run: pytest
 
   build-and-push:
     runs-on: ubuntu-latest
@@ -63,6 +59,8 @@ jobs:
           context: ./starter/backend
           push: true
           tags: ${{ secrets.BACKEND_ECR_REPO }}:${{ github.sha }}
+          build-args: |
+            FLASK_ENV=production
 
   deploy:
     runs-on: ubuntu-latest
@@ -82,7 +80,8 @@ jobs:
           aws-region: us-east-1
 
       - name: Update kubeconfig
-        run: aws eks update-kubeconfig --region us-east-1 --name cluster
+        run: |
+          aws eks update-kubeconfig --region us-east-1 --name cluster
 
       - name: Update image tag
         run: |
