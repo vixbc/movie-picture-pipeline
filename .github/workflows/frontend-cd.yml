@@ -1,0 +1,64 @@
+name: Frontend CD
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'starter/frontend/**'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    defaults:
+      run:
+        working-directory: starter/frontend
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Log in to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Set image tag
+        id: vars
+        run: echo "IMAGE_TAG=${GITHUB_SHA::7}" >> $GITHUB_ENV
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - run: npm ci
+      - run: npm run lint
+      - run: CI=true npm test
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            --build-arg REACT_APP_MOVIE_API_URL=http://localhost:5000 \
+            -t ${{ secrets.ECR_REPO_FRONTEND }}:$IMAGE_TAG .
+
+      - name: Push to ECR
+        run: docker push ${{ secrets.ECR_REPO_FRONTEND }}:$IMAGE_TAG
+
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --region ${{ secrets.AWS_REGION }} --name cluster
+
+      - name: Set image in kustomize
+        run: |
+          cd k8s
+          kustomize edit set image frontend=${{ secrets.ECR_REPO_FRONTEND }}:$IMAGE_TAG
+
+      - name: Apply Kubernetes manifests
+        run: |
+          cd k8s
+          kustomize build | kubectl apply -f -
