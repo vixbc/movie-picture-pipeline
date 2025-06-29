@@ -44,7 +44,7 @@ jobs:
       - name: Build Docker image
         run: |
           docker build \
-            --build-arg REACT_APP_MOVIE_API_URL=http://a679460dcf66a40e486c661da3f8665f-1449950342.us-east-1.elb.amazonaws.com/movies \
+            --build-arg REACT_APP_MOVIE_API_URL=http://a679460dcf66a40e486c661da3f8665f-1449950342.us-east-1.elb.amazonaws.com \
             -t ${{ secrets.ECR_REPO_FRONTEND }}:$IMAGE_TAG .
 
       - name: Push to ECR
